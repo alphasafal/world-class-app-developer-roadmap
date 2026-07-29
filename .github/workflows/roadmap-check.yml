@@ -1,0 +1,16 @@
+name: Roadmap checks
+on:
+  push:
+  pull_request:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate roadmap
+        shell: bash
+        run: |
+          test -f roadmap/365-DAYS.md
+          count=$(grep -Ec '^\| \[[ x]\] \| [0-9]+ \|' roadmap/365-DAYS.md)
+          test "$count" -eq 365
+          ! grep -RInE '(api[_-]?key|secret|password)[[:space:]]*[:=][[:space:]]*[^<[:space:]]+' . --exclude-dir=.git
